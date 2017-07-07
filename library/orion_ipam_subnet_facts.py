@@ -11,7 +11,7 @@ def main():
             username = dict(required=True, default=None),
             password = dict(required=True, default=None, no_log=True),
             subnet = dict(required=True),
-            validate_certs = dict(required=True, default=False)
+            validate_certs = dict(required=False, default=False)
         ),
         required_together = [['username', 'password']],
         supports_check_mode = False
