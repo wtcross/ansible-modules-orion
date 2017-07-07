@@ -3,6 +3,7 @@
 from orionsdk import SwisClient
 from ansible.module_utils.basic import *
 from ansible.module_utils.pycompat24 import get_exception
+import urllib3
 
 def main():
     module = AnsibleModule(
@@ -23,8 +24,7 @@ def main():
     subnet = module.params['subnet']
     validate_certs = module.params['validate_certs']
 
-    if not validate_certs:
-       requests.packages.urllib3.disable_warnings()
+    urllib3.disable_warnings()
 
     client = SwisClient(api_url, username, password)
     query = "SELECT TOP 255 I.DisplayName FROM IPAM.IPNode I WHERE Status=2 AND I.Subnet.DisplayName Like '{}%'".format(subnet)
