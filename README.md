@@ -11,7 +11,7 @@ order to use these modules.
 
 It can be installed with `pip install orionsdk`.
 
-Example Playbook
+Example Playbooks
 ----------------
 
 ```yaml
@@ -28,4 +28,17 @@ Example Playbook
             FROM Orion.NPM.Interfaces I
             WHERE I.TypeName='{{ interface_type }}'
         register: query_result
+```
+
+```yaml
+    - hosts: localhost
+      roles:
+        - ansible-modules-orion
+      tasks:
+        orion_ipam_subnet_facts:
+          api_url: "{{ orion_api_url }}"
+          username: "{{ orion_username }}"
+          password: "{{ orion_password }}"
+          name: 10.245.15.9
+        register: subnet_facts
 ```
