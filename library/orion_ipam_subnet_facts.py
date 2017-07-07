@@ -11,7 +11,7 @@ def main():
             username = dict(required=True, default=None),
             password = dict(required=True, default=None, no_log=True),
             subnet = dict(required=True),
-            validate_certs = dict(required=False, default=False)
+            validate_certs = dict(required=False, default=True)
         ),
         required_together = [['username', 'password']],
         supports_check_mode = False
@@ -23,7 +23,11 @@ def main():
     subnet = module.params['subnet']
     validate_certs = module.params['validate_certs']
 
-    client = SwisClient(api_url, username, password, verify=validate_certs)
+    if not validate_certs:
+       from requests.packages.urllib3.exceptions import InsecureRequestWarning
+       requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+    client = SwisClient(api_url, username, password)
     query = "SELECT TOP 255 I.DisplayName FROM IPAM.IPNode I WHERE Status=2 AND I.Subnet.DisplayName Like '{0}%'".format(subnet)
     response = client.query(query)
     available_ip_addresses = [ ip_node['DisplayName'] for ip_node in response['result'] ]
