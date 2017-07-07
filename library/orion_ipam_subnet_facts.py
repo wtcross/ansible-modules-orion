@@ -10,7 +10,7 @@ def main():
             api_url = dict(required=True, default=None),
             username = dict(required=True, default=None),
             password = dict(required=True, default=None, no_log=True),
-            name = dict(required=True)
+            subnet = dict(required=True)
         ),
         required_together = [['username', 'password']],
         supports_check_mode = False
@@ -19,12 +19,11 @@ def main():
     api_url = module.params['api_url']
     username = module.params['username']
     password = module.params['password']
-    name = module.params['name']
+    subnet = module.params['subnet']
 
     try:
         client = SwisClient(api_url, username, password)
-        subnet = "'" + subnet + '%' + "'"
-        query = "SELECT TOP 255 I.DisplayName FROM IPAM.IPNode I WHERE Status=2 AND I.Subnet.DisplayName Like " + subnet
+        query = "SELECT TOP 255 I.DisplayName FROM IPAM.IPNode I WHERE Status=2 AND I.Subnet.DisplayName Like '{0}%'".format(subnet)
         response = client.query(query)
         available_ip_addresses = [ ip_node['DisplayName'] for ip_node in response['result'] ]
         module.exit_json(changed=True, available_ip_addresses=available_ip_addresses)
