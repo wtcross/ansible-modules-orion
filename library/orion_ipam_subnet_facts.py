@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+import requests
 from orionsdk import SwisClient
 from ansible.module_utils.basic import *
 from ansible.module_utils.pycompat24 import get_exception
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 def main():
     module = AnsibleModule(
@@ -23,7 +25,6 @@ def main():
     subnet = module.params['subnet']
     validate_certs = module.params['validate_certs']
 
-    from requests.packages.urllib3.exceptions import InsecureRequestWarning
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
     client = SwisClient(api_url, username, password, verify=validate_certs)
