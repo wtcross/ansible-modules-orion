@@ -24,11 +24,10 @@ def main():
     validate_certs = module.params['validate_certs']
 
     if not validate_certs:
-       from requests.packages.urllib3.exceptions import InsecureRequestWarning
-       requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+       requests.packages.urllib3.disable_warnings()
 
     client = SwisClient(api_url, username, password)
-    query = "SELECT TOP 255 I.DisplayName FROM IPAM.IPNode I WHERE Status=2 AND I.Subnet.DisplayName Like '{0}%'".format(subnet)
+    query = "SELECT TOP 255 I.DisplayName FROM IPAM.IPNode I WHERE Status=2 AND I.Subnet.DisplayName Like '{}%'".format(subnet)
     response = client.query(query)
     available_ip_addresses = [ ip_node['DisplayName'] for ip_node in response['result'] ]
 
